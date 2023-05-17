@@ -12,13 +12,14 @@ const getAll = async (req, res) => {
 // GET todos
 
 const deleteTod = async (req, res) => {
-  const { id } = req.params;
+  const {ids} = req.body
+  console.log(ids)
   try {
-    await Todo.findByIdAndDelete(id);
+    await Todo.deleteMany({_id:{'$in':[...ids]}});
   } catch (err) {
     return res.status(404).json({ message: "Cannot remove this item " });
   }
-  return res.status(202).json({ message: `${id} has been deleted` });
+  return res.status(202).json({ message: `${ids.toString()} has been deleted` });
 };
 // DELETE todo
 
