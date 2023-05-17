@@ -1,4 +1,3 @@
-const { json } = require("body-parser");
 const Todo = require("../model/Todo");
 
 const getAll = async (req, res) => {
@@ -31,12 +30,16 @@ const updateTodo = async (req, res) => {
 
   try {
     for (let item of list) {
-      await Todo.findByIdAndUpdate(item._id, {title:item.title, assignee:item.assignee, status:item.status});
+      await Todo.findByIdAndUpdate(item._id, {
+        title: item.title,
+        assignee: item.assignee,
+        status: item.status,
+      });
     }
   } catch (err) {
     return res.json(404).json({ message: "Cannot found todo ):" });
   }
-  return res.json({mesage:"working"})
+  return res.json({ mesage: "working" });
 };
 
 const addTodo = async (req, res) => {
