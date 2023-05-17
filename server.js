@@ -20,7 +20,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser());
+app.use(bodyParser.json());
 
 app.use("/api", todoRouter);
 
