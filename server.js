@@ -24,6 +24,7 @@ app.use(bodyParser.json());
 
 app.use("/api", todoRouter);
 
+
 app.use("/", async (req, res) => {
   return res.status(404).json({ message: "Error page not Found 404" });
 });
