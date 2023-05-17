@@ -1,3 +1,4 @@
+const { json } = require("body-parser");
 const Todo = require("../model/Todo");
 
 const getAll = async (req, res) => {
@@ -12,41 +13,30 @@ const getAll = async (req, res) => {
 // GET todos
 
 const deleteTod = async (req, res) => {
-  const {ids} = req.body
-  console.log(ids)
+  const { ids } = req.body;
+  console.log(ids);
   try {
-    await Todo.deleteMany({_id:{'$in':[...ids]}});
+    await Todo.deleteMany({ _id: { $in: [...ids] } });
   } catch (err) {
-    return res.status(404).json({ message: "Cannot remove this item " });
+    return res.status(404).json({ message: "Cannot remove this items" });
   }
-  return res.status(202).json({ message: `${ids.toString()} has been deleted` });
+  return res
+    .status(202)
+    .json({ message: `${ids.toString()} has been deleted` });
 };
 // DELETE todo
 
 const updateTodo = async (req, res) => {
-  const { id } = req.params;
-  const { title, assignee, status } = req.body;
-  let todo;
+  const { list } = req.body;
+
   try {
-    todo = await Todo.findById(id);
+    for (let item of list) {
+      await Todo.findByIdAndUpdate(item._id, {title:item.title, assignee:item.assignee, status:item.status});
+    }
   } catch (err) {
     return res.json(404).json({ message: "Cannot found todo ):" });
   }
-  if (todo) {
-    todo.title = title;
-    todo.assignee = assignee;
-    todo.status = status;
-  }
-  try {
-    await todo.save();
-  } catch (err) {
-    return res
-      .json(406)
-      .json({ message: "Cannot change the todo, please try later" });
-  }
-  return res
-    .status(201)
-    .json({ message: `${title} has been updated successfully` });
+  return res.json({mesage:"working"})
 };
 
 const addTodo = async (req, res) => {
