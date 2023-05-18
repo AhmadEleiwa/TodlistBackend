@@ -13,7 +13,7 @@ const getAll = async (req, res) => {
 
 const deleteTod = async (req, res) => {
   const { ids } = req.body;
-  console.log(ids);
+  console.log(req.body);
   try {
     await Todo.deleteMany({ _id: { $in: [...ids] } });
   } catch (err) {
@@ -27,7 +27,7 @@ const deleteTod = async (req, res) => {
 
 const updateTodo = async (req, res) => {
   const { list } = req.body;
-
+  console.log(list)
   try {
     for (let item of list) {
       await Todo.findByIdAndUpdate(item._id, {
@@ -39,7 +39,7 @@ const updateTodo = async (req, res) => {
   } catch (err) {
     return res.json(404).json({ message: "Cannot found todo ):" });
   }
-  return res.json({ mesage: "working" });
+  return res.json({ todo: await Todo.find() });
 };
 
 const addTodo = async (req, res) => {
