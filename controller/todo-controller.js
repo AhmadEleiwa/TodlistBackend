@@ -24,10 +24,20 @@ const deleteTod = async (req, res) => {
     .json({ message: `${ids.toString()} has been deleted` });
 };
 // DELETE todo
+const updateTodoById = async (req, res) => {
+  const { id } = req.params;
+  const { title, assignee, status } = req.body;
+  try {
+    await Todo.findByIdAndUpdate(id, { title, assignee, status });
+  } catch (err) {
+    return res.json({ message: "errr" });
+  }
+  return res.json({ todo: await Todo.find() });
+};
 
 const updateTodo = async (req, res) => {
   const { list } = req.body;
-  console.log(list)
+  console.log(list);
   try {
     for (let item of list) {
       await Todo.findByIdAndUpdate(item._id, {
@@ -43,6 +53,7 @@ const updateTodo = async (req, res) => {
 };
 
 const addTodo = async (req, res) => {
+  console.log('add todo endpoint requested....')
   const { title, assignee, status } = req.body;
   const todo = new Todo({
     title,
@@ -64,4 +75,6 @@ const addTodo = async (req, res) => {
 module.exports.addTodo = addTodo;
 module.exports.getAll = getAll;
 module.exports.updateTodo = updateTodo;
+module.exports.updateTodoById = updateTodoById;
+
 module.exports.deleteTodo = deleteTod;
