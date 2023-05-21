@@ -24,28 +24,15 @@ const deleteTod = async (req, res) => {
     .json({ message: `${ids.toString()} has been deleted` });
 };
 // DELETE todo
-const updateTodoById = async (req, res) => {
-  const { id } = req.params;
-  const { title, assignee, status } = req.body;
-  try {
-    await Todo.findByIdAndUpdate(id, { title, assignee, status });
-  } catch (err) {
-    return res.json({ message: "errr" });
-  }
-  return res.json({ todo: await Todo.find() });
-};
+
 
 const updateTodo = async (req, res) => {
-  const { list } = req.body;
-  console.log(list);
+  const { ids, payload } = req.body;
   try {
-    for (let item of list) {
-      await Todo.findByIdAndUpdate(item._id, {
-        title: item.title,
-        assignee: item.assignee,
-        status: item.status,
-      });
-    }
+      await Todo.find({_id :{"$in":ids }}).updateMany({_id :{"$in":ids }}, [
+        {"$set":payload}
+      ])
+    
   } catch (err) {
     return res.json(404).json({ message: "Cannot found todo ):" });
   }
@@ -75,6 +62,6 @@ const addTodo = async (req, res) => {
 module.exports.addTodo = addTodo;
 module.exports.getAll = getAll;
 module.exports.updateTodo = updateTodo;
-module.exports.updateTodoById = updateTodoById;
+
 
 module.exports.deleteTodo = deleteTod;
